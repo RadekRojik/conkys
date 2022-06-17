@@ -74,7 +74,7 @@ rotation=$(cat /sys/block/$m_disk/queue/rotational) || exit 1
 [[ $rotation -ne 0 ]] || exit 0
 
 # detekce typu disku
-TYPE=$(awk /json.device.type/{'sub("\"","",$NF);sub("\"\;","",$NF); print $NF'} <<< `smartctl --json=g -d test /dev/sda`)
+TYPE=$(awk /json.device.type/{'sub("\"","",$NF);sub("\";","",$NF);print $NF'} <<< `smartctl --json=g -d test /dev/sda`)
 
 # vytvoříme si vlastní konstrukt příkazu na uspávání
 uspavadlo="smartctl -s standby,now -d $TYPE"
