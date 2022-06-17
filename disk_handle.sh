@@ -161,8 +161,8 @@ while :;do
 # ***********************************************************************
   # výpis stavů různých proměnných.
   # Následující dva řádky odkomentovat jen na testy:
-  hlaska
-  echo $nespi
+  # hlaska
+  # echo $nespi
 # ***********************************************************************
 
 sleep $m_loop
