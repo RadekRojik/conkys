@@ -1,0 +1,16 @@
+################################################################################
+# conkys.service
+#
+################################################################################
+
+[Unit]
+
+Description=Spouštění skriptu na čtení teplot z disku %i
+
+[Service]
+
+ExecStart=-/usr/local/sbin/conkys_start.sh %i
+
+[Install]
+
+WantedBy=graphical.target

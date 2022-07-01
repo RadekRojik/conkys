@@ -1,0 +1,7 @@
+# fyzické odebrání disku
+ACTION=="remove", ENV{DEVNAME}=="/dev/sd?", RUN+="/usr/local/sbin/conkys_end.sh %k"
+# fyzické přidání disku
+ACTION=="add",  KERNEL=="sd?", TAG+="systemd", ENV{SYSTEMD_WANTS}="conkys@%k.service"
+# ACTION=="remove", ENV{DEVNAME}=="/dev/sd?", ENV{DEVTYPE}=="disk", TAG+="systemd", ENV{SYSTEMD_WANTS}="ukonci@%k.service"
+# Následující řádek by měl nejspíš fungovat na systémech bez systemd
+#ACTION=="add",  KERNEL=="sd?", RUN+="/usr/local/sbin/conkys_start.sh %k"
