@@ -68,7 +68,7 @@ install -o root -m 750 ./conkys_start.sh /usr/local/sbin/conkys_start.sh
 install -o root -m 750 ./conkys_end.sh /usr/local/sbin/conkys_end.sh
 install -o root -m 664 ./conkys@.service /etc/systemd/system/conkys@.service
 install -o $uzivatel -m 664 ./99-conkys.rules /etc/udev/rules.d/99-conkys.rules
-install -o $uzivatel -m 664 ./$file1 $USER_DIR/$file1
+install -o $uzivatel -m 774 ./$file1 $USER_DIR/$file1
 install -o $uzivatel -m 664 ./my_conf.conf $USER_DIR/my_conf.conf
 # zapnutí služby
 systemctl enable /etc/systemd/system/conkys@.service
