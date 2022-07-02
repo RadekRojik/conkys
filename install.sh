@@ -22,7 +22,7 @@
 uzivatel=$(id -n -u 1000)
 
 # konfigurační adresář
-USER_DIR=/home/$uzivatel/.config/conky
+USER_DIR=/home/$uzivatel/.conky
 # konfigurační soubor se základním nastavením
 file1=conkys_data.conf.sh
 # konfigurak=$USER_DIR/my_conf.conf
@@ -60,6 +60,8 @@ sed -i "0,/source$/s//${vklad//\//\\/}/1" conkys_start.sh
 # příprava ukončovacího skriptu
 vklad="source $USER_DIR/$file1"
 sed -i "0,/source$/s//${vklad//\//\\/}/1" conkys_end.sh
+
+[ -d $USER_DIR ] || mkdir -m 777 $USER_DIR
 
 # kopírování souborů na svá místa s příslušnýma právama
 install -o root -m 750 ./conkys_start.sh /usr/local/sbin/conkys_start.sh
