@@ -131,13 +131,14 @@ TYPE=`ptam_se <<< $(smartctl -i --json=g /dev/$DISK)` || ukonceni_skriptu "nelze
 
 
 # -----------------------------------------------------------------------
-# TYPE disku | sériové číslo | doba uspání | rychlost kontroly | treshold
+# Ignorace disku | TYPE disku | sériové číslo | doba uspání | rychlost kontroly | treshold | argumenty
 # -----------------------------------------------------------------------
 # rotation=$(cat /sys/block/$DISK/queue/rotational) || exit 1
 
 
 fn_cteni_promennych () {
   # pokud je TYPE v databazi načti to, jinak vygeneruj z dotazu.
+  ignorovat="0"
   [[ $disk_type ]] && TYPE=$disk_type || fn_type 
   # pokud je nastaveno disk_uspani přebere se to, jinak nastavit default.
   [[ $disk_uspani ]] && SPAT_ZA=$disk_uspani
@@ -182,13 +183,16 @@ return $ERSTE_GANG
 # načtení dat z databáze
 # UNBEKANNT=
 while read -r radek; do
-  IFS=\| read -r disk_type disk_seriak disk_uspani disk_rychlost disk_treshold < <(sed 's/ //g; s/\t//g' <<< "$radek")
+  IFS=\| read -r ignorovat disk_type disk_seriak disk_uspani disk_rychlost disk_treshold argumenty < <(sed 's/^[ ]*//; s/[ ]*|/|/g; s/|[ ]*/|/g; s/[ ]*$//' <<< "$radek")
   # řádek začínající hashtagem ignorovat. Je to komentář.
-  [[ $disk_type = \#* ]] && continue
-  # porovnání disku s databází. Pokud se neschoduje sériové číslo, přejdi na další řádek
+  [[ $ignorovat = \#* ]] && continue
+  # porovnání disku s databází. Pokud se neshoduje sériové číslo, přejdi na další řádek
   [[ $disk_seriak != $SERIAL_NUM ]] && continue
   # zde už jen pokud máme disk v databázi
+  [[ $ignorovat = "1" ]] && ukonceni_skriptu "je ignorován" 0
   fn_cteni_promennych
+  [[ $argumenty ]] && smartctl $argumenty -d $TYPE /dev/$DISK
+  #fn_cteni_promennych
   UNBEKANNT=1
   break
   echo "$(date +'%F %T') $radek" >> "$LOG"
@@ -201,7 +205,7 @@ done < "$konfigurak"
 # disk s těmito parametry načten
 if [[ ! $UNBEKANNT ]]; then
   fn_treshold || fn_treshold
-  echo "$TYPE|$SERIAL_NUM|$SPAT_ZA|$LOOP_DELAY|$TRESHOLD" >> "$konfigurak"
+  echo "$ignorovat|$TYPE|$SERIAL_NUM|$SPAT_ZA|$LOOP_DELAY|$TRESHOLD|" >> "$konfigurak"
 fi
 
 
