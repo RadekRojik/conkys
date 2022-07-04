@@ -1,0 +1,4 @@
+ACTION=="remove", ENV{DEVNAME}=="/dev/sd?", RUN+="/usr/local/sbin/conkys_end.sh %k"
+ACTION=="add",  KERNEL=="sd?", TAG+="systemd", ENV{SYSTEMD_WANTS}="conkys@%k.service"
+# Maybe line below work on systems without systemd
+#ACTION=="add",  KERNEL=="sd?", RUN+="/usr/local/sbin/conkys_start.sh %k"

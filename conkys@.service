@@ -5,7 +5,7 @@
 
 [Unit]
 
-Description=Spouštění skriptu na čtení teplot z disku %i
+Description=Start temperatur reader for disc %i
 
 [Service]
 
