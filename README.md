@@ -1,2 +1,3 @@
 # conkys
-soubor skriptů na výpis teplot disků
+
+https://github.com/RadekRojik/conkys/wiki
