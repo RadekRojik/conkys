@@ -41,10 +41,4 @@ Jednotlivé sloupce:
 * `treshold` magická hodnota. Obsahuje kolik přístupů/čtení z disku musí absolvovat program `smartctl` při načtení teploty. Jsou to kroky které by se měli považovat za neaktivitu disku. Samozřejmě je možno si to také doladit. Čím nižší číslo, tím lépe. Avšak, pokud se to přežene, disk by se teoreticky nikdy nepřepnul do `standby`. Vysoké číslo může mít za následek násilné přepnutí disku do `standby` při nějaké aktivitě a opětovném 'probuzení'. Což by mu zkracovalo životnost.
 * `arguments` bude asi ve většině případech prázdné. Zde je možno si zadat argumenty dle zkušeností a manuálové stránky programu `smartctl`. S těmito argumenty bude po každém připojení disku disk nastaven/umravněn (nastavení proběhne jen jednou).
 
-*Tipy:*  
--  Sledování logu: `tail -n 10 -f /var/log/conkys`  
--  Načítání proměnných v `conky`:  
-    V sekci `conky.config` přidat řádek  
-    `template0 = "${if_existing /dev/shm/conkys/\\1/temp} \\1: ${tail /dev/shm/conkys/\\1/temp 1}°C${endif}"`  
-    A v sekci `conky.text` už jen  
-    `${template0 sdb}` pokud se chce sledovat teplota disku `sdb`. K ostatním diskům pokračovat analogicky. Pokud se používá čtení pomocí `hwmon` Je žádoucí kvůli zabránění duplicity hodnot přidat do databáze disku `conkys_data.conf` hodnotu **1** ve sloupci `ignorace`
+*Tipy a praktické příklady ve wiki:*  https://github.com/RadekRojik/conkys/wiki
