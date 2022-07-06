@@ -105,7 +105,7 @@ fn_cteni_promennych () {
 fn_treshold () {
 fn_type
 # Read how many 'reads' HD has
-read TR zbytek < <(cat /sys/block/$DISK/stat 2> /dev/null) || exit_script "can not read stat file" 1
+read TR zb1 zb2 zb3 TW rest < <(cat /sys/block/$DISK/stat 2> /dev/null) || exit_script "can not read stat file" 1
 # Prepare question
 co="json.temperature.current"
 # Test if it is the first pass
@@ -123,9 +123,11 @@ else
   fi
 fi
 # Again read how many 'reads' are from HD stat file
-read TR1 zbytek < <(cat /sys/block/$DISK/stat 2> /dev/null) || exit_script "can not read stat file" 1
-# Diference between reads make our own threshold
-TRESHOLD=$(( $TR1-$TR ))
+read TR1 zb1 zb2 zb3 TW1 rest < <(cat /sys/block/$DISK/stat 2> /dev/null) || exit_script "can not read stat file" 1
+# Diference between readI/Os and writeI/Os  make our own threshold
+TRESHOLDr=$(( $TR1 - $TR ))
+TRESHOLDw=$(( $TW1 - $TW ))
+TRESHOLD=$(( $TRESHOLDr + $TRESHOLDw ))
 return $ERSTE_GANG
 }
 
@@ -165,7 +167,8 @@ fi
 fn_temp () {
 ACT=$ACTIVE
 ACTIVE=0
-read TR zbytek < <(cat /sys/block/$DISK/stat 2> /dev/null)
+read TR zb1 zb2 zb3 TW rest < <(cat /sys/block/$DISK/stat 2> /dev/null)
+TRW=$(( $TR + $TW ))
 co="json.temperature.current"
 TEMP=`ptam_se <<< $(Dotaz)` && ACTIVE=1
 [ $TEMP ] && echo $TEMP > $OPERATIVNI_DIR/$DISK/temp
@@ -177,7 +180,7 @@ echo $ACTIVE > $OPERATIVNI_DIR/$DISK/activity
 # initilization of variables
 ACTIVE=1
 pocatecni_cas=$(date +%s)
-TR1=0
+TRW1=0
 echo "$(date +'%F %T') $DISK started" >> "$LOG"
 
 
@@ -197,11 +200,12 @@ while :; do
   [ $ACTIVE -eq 0 ] && continue
   
   # if threshold is bigger than our own default, downcount again
-  [ $(( $TR - $TR1 )) -gt $TRESHOLD ] && pocatecni_cas=$(date +%s)
+  # [ $(( $TRW - $TRW1 )) -gt $TRESHOLD ] && pocatecni_cas=$(date +%s) && echo "$(date +'%F %T') $DISK set new timestamp" >> "$LOG"
+  [ $(( $TRW - $TRW1 )) -gt $TRESHOLD ] && pocatecni_cas=$(date +%s)
   
   # HD timeout, go to sleep (switch to standby mode)
   [ $(( $pocatecni_cas + $SPAT_ZA )) -lt $(date +%s) ] && Uspi
   
   # clear reads
-  TR1=$TR
+  TRW1=$TRW
 done
