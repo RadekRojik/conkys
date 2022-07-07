@@ -41,4 +41,4 @@ Jednotlivé sloupce:
 * `treshold` magická hodnota. Obsahuje kolik přístupů/čtení z disku musí absolvovat program `smartctl` při načtení teploty. Jsou to kroky které by se měli považovat za neaktivitu disku. Samozřejmě je možno si to také doladit. Čím nižší číslo, tím lépe. Avšak, pokud se to přežene, disk by se teoreticky nikdy nepřepnul do `standby`. Vysoké číslo může mít za následek násilné přepnutí disku do `standby` při nějaké aktivitě a opětovném 'probuzení'. Což by mu zkracovalo životnost.
 * `arguments` bude asi ve většině případech prázdné. Zde je možno si zadat argumenty dle zkušeností a manuálové stránky programu `smartctl`. S těmito argumenty bude po každém připojení disku disk nastaven/umravněn (nastavení proběhne jen jednou).
 
-*Tipy a praktické příklady ve wiki:*  https://github.com/RadekRojik/conkys/wiki
+*Tipy a praktické příklady [na wiki:](https://github.com/RadekRojik/conkys/wiki "Conkys wiki")*
